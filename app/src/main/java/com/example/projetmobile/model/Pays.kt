@@ -1,9 +1,10 @@
 package com.example.projetmobile.model
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
+import com.google.gson.annotations.SerializedName
 
-@Parcelize
 data class Pays(
-    val name: String
-) : Parcelable
+    @SerializedName("name")
+    val nom: String,
+    @SerializedName("flag")
+    val drapeau: String
+)

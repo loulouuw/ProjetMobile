@@ -1,12 +1,10 @@
-package com.example.projetmobile.model
+package com.example.projetmobile
 
 import com.google.gson.annotations.SerializedName
 
 data class Country(
     @SerializedName("name")
     val name: Name,
-    @SerializedName("capital")
-    val capital: List<String>?,
     @SerializedName("flags")
     val flags: Flags
 )
