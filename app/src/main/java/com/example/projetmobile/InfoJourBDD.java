@@ -23,6 +23,4 @@ public class InfoJourBDD extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS infoJour");
         onCreate(db);
     }
-
-    // Méthodes pour insérer, mettre à jour, supprimer et récupérer les données
 }

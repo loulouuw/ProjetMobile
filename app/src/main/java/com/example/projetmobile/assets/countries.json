@@ -1,0 +1,30 @@
+[
+  {
+    "name": {
+      "common": "Angola",
+      "official": "Republic of Angola"
+    },
+    "flags": {
+      "png": "https://flagcdn.com/w320/ao.png"
+    },
+    "capital": ["Luanda"],
+    "region": "Africa",
+    "subregion": "Middle Africa",
+    "population": 32866268,
+    "borders": ["COG", "COD", "ZMB", "NAM"]
+  },
+  {
+    "name": {
+      "common": "France",
+      "official": "French Republic"
+    },
+    "flags": {
+      "png": "https://flagcdn.com/w320/fr.png"
+    },
+    "capital": ["Paris"],
+    "region": "Europe",
+    "subregion": "Western Europe",
+    "population": 65273511,
+    "borders": ["BEL", "DEU", "ITA", "LUX", "MCO", "ESP", "CHE"]
+  }
+]

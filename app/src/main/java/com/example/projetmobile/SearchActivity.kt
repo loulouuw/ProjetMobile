@@ -1,10 +1,14 @@
 package com.example.projetmobile
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
+import android.widget.ImageButton
+import android.widget.ProgressBar
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.projetmobile.api.CountryApiService
 import com.example.projetmobile.api.RetrofitClient
 import com.example.projetmobile.model.Country
@@ -14,40 +18,63 @@ import retrofit2.Response
 
 class SearchActivity : AppCompatActivity() {
 
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var countryAdapter: CountryAdapter
+    private lateinit var progressBar: ProgressBar
+    private lateinit var searchEditText: EditText
+    private lateinit var searchButton: Button
+    private lateinit var reloadButton: Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        val searchEditText = findViewById<EditText>(R.id.search_edit_text)
-        val searchButton = findViewById<Button>(R.id.search_button)
-        val resultTextView = findViewById<TextView>(R.id.result_text_view)
+        val backButton = findViewById<ImageButton>(R.id.back_button)
+        backButton.setOnClickListener {
+            onBackPressed()
+        }
+
+        searchEditText = findViewById(R.id.search_edit_text)
+        searchButton = findViewById(R.id.search_button)
+        reloadButton = findViewById(R.id.reload_button)
+        progressBar = findViewById(R.id.progressBar)
+        recyclerView = findViewById(R.id.recyclerView)
+
+        recyclerView.layoutManager = LinearLayoutManager(this)
 
         searchButton.setOnClickListener {
             val query = searchEditText.text.toString()
             if (query.isNotEmpty()) {
-                searchCountry(query, resultTextView)
+                searchCountries(query)
+            }
+        }
+
+        reloadButton.setOnClickListener {
+            val query = searchEditText.text.toString()
+            if (query.isNotEmpty()) {
+                searchCountries(query)
             }
         }
     }
 
-    private fun searchCountry(query: String, resultTextView: TextView) {
+    private fun searchCountries(query: String) {
+        progressBar.visibility = View.VISIBLE
+        reloadButton.visibility = View.GONE
         val apiService = RetrofitClient.instance.create(CountryApiService::class.java)
         apiService.getCountriesByName(query).enqueue(object : Callback<List<Country>> {
             override fun onResponse(call: Call<List<Country>>, response: Response<List<Country>>) {
+                progressBar.visibility = View.GONE
                 if (response.isSuccessful && response.body() != null) {
-                    val countries = response.body()
-                    val result = StringBuilder()
-                    countries?.forEach { country ->
-                        result.append("${country.name} : ${country.flag}\n")
-                    }
-                    resultTextView.text = result.toString()
+                    countryAdapter = CountryAdapter(response.body()!!)
+                    recyclerView.adapter = countryAdapter
                 } else {
-                    resultTextView.text = "Aucun résultat trouvé."
+                    reloadButton.visibility = View.VISIBLE
                 }
             }
 
             override fun onFailure(call: Call<List<Country>>, t: Throwable) {
-                resultTextView.text = "Erreur lors de la recherche."
+                progressBar.visibility = View.GONE
+                reloadButton.visibility = View.VISIBLE
             }
         })
     }
